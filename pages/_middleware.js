@@ -2,8 +2,6 @@ import { getToken } from "next-auth/jwt";
 import { NextResponse } from "next/server";
 
 export async function middleware(req) {
-  const url = req.nextUrl.clone();
-  url.pathname = "/home";
   if (req.nextUrl.pathname === "/") {
     const session = await getToken({
       req,
@@ -12,7 +10,8 @@ export async function middleware(req) {
     });
     // You could also check for any property on the session object,
     // like role === "admin" or name === "John Doe", etc.
-    if (!session) return NextResponse.redirect(url);
+    if (!session)
+      return NextResponse.redirect(`${process.env.NEXTAUTH_URL}/home`);
     // If user is authenticated, continue.
   }
 }
